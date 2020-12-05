@@ -62,7 +62,37 @@
  * @param {Object[]} transforms
  */
 function transformState(state, transforms) {
-  // write code here
+  // копіюємо обєкт state щоб не змінювати його а юзати копію
+  const arrayOfStates = [];
+
+  for (const obj of transforms) {
+    const operation = obj.operation;
+
+    if (operation === 'addProperties') { // при умові додати  додаємо
+    // пропертіс в обєкт масиву
+      Object.assign(state, obj.properties);
+
+      arrayOfStates.push({ ...state });
+    }
+
+    if (operation === 'removeProperties') {
+      for (const propKey of obj.properties) {
+        if (state.hasOwnProperty(propKey)) {
+          delete state[propKey];
+        }
+      }
+      arrayOfStates.push({ ...state });
+    }
+
+    if (operation === 'clear') {
+      for (const key in state) {
+        delete state[key];
+      }
+      arrayOfStates.push({ ...state });
+    }
+  }
+
+  return arrayOfStates;
 }
 
 module.exports = transformState;
